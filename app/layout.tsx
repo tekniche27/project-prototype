@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { PointsProvider } from "@/context/PointsContext";
+import { SessionProvider } from "next-auth/react";
+import Navbar from "@/components/navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,12 +27,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <SessionProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <PointsProvider>
+        <Navbar />
         {children}
+        </PointsProvider>
       </body>
     </html>
+    </SessionProvider>
   );
 }

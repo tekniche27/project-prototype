@@ -1,6 +1,7 @@
 'use client'
 import Link from "next/link"
 import { useState, useEffect } from 'react'
+import Image from 'next/image';
 
 
 const generateColor = () => {
@@ -21,7 +22,7 @@ export default function Category() {
 
   const [data, setData] = useState<any[]>([])
   const [isLoading, setLoading] = useState(true)
-  let [bgColor, setBgColor] = useState("#FFD425")
+  //const [bgColor, setBgColor] = useState("#FFD425")
   const [selectedCat, setSelectedCat] = useState("");
  
   useEffect(() => {
@@ -60,14 +61,14 @@ export default function Category() {
   return (
     <main>
       <div className="mt-10">
-        <img src="logo2.png" className="object-cover" alt="Responsive Image" />
+        <Image src="/logo2.png" className="object-cover" alt="Responsive Image" width={305} height={225} />
       </div>
       <div className="text-3xl text-black ml-10">Select Category: </div>
       <div className="grid grid-cols-6 gap-2 justify-center content-center place-content-center place-items-center mt-10">
         {data.map((item: { categoryId: any, categoryCode: any, categoryDesc: any }, index: any) => {
           return (
             <button
-              key={item.categoryId}
+              key={index}
               className="text-xl text-white text-center w-40 h-40 m-auto rounded border-white border-4 
               content-center place-content-center place-items-center font-bold"
               style={{ backgroundColor: selectedCat===item.categoryCode ? "gray" : generateColor()}}

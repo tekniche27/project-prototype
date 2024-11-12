@@ -3,6 +3,7 @@
 import { useParams, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 
 export default function Category() {
@@ -16,33 +17,33 @@ export default function Category() {
 
   const router = useRouter();
 
-  const roomCodeParam = new URLSearchParams({
-      'roomCode': params.room
-  });
-
-  const getRoomClientList = async () => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/games?${roomCodeParam}`,{
-      headers: {
-        'Content-Type': 'application/json'       
-      },
-      method: 'GET'
-    });
-    const data = await req.json();
-      return data
-  };
-
-  const getQuestionList = async () => {
-    const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/room/questions?${roomCodeParam}`,{
-      headers: {
-        'Content-Type': 'application/json'       
-      },
-      method: 'GET'
-    });
-    const data = await req.json();
-      return data
-  };
-
   useEffect(() => {
+
+    const roomCodeParam = new URLSearchParams({
+      'roomCode': params.room
+    });
+
+    const getRoomClientList = async () => {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/games?${roomCodeParam}`,{
+        headers: {
+          'Content-Type': 'application/json'       
+        },
+        method: 'GET'
+      });
+      const data = await req.json();
+        return data
+    };
+  
+    const getQuestionList = async () => {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/room/questions?${roomCodeParam}`,{
+        headers: {
+          'Content-Type': 'application/json'       
+        },
+        method: 'GET'
+      });
+      const data = await req.json();
+        return data
+    };
 
     getRoomClientList().then(data => {
       setClientData(data)
@@ -69,7 +70,7 @@ export default function Category() {
   return (
     <main>
       <div className="mt-10">
-        <img src="../logo2.png" className="object-cover" alt="Responsive Image" />
+        <Image src="/logo2.png" className="object-cover" alt="Responsive Image" width={305} height={225} />
       </div>
       <div className="grid grid-cols-1 mt-2 justify-center content-center place-content-center place-items-center">
         <div className="bg-custom_blue text-xl text-white text-center w-96 h-16 m-auto rounded-s-3xl rounded-e-3xl
@@ -89,7 +90,7 @@ export default function Category() {
         {clientData.map((item: { clientId: any }, index: any) => {
           return (
             <div 
-            key={item.clientId}>
+            key={index}>
             {item.clientId} 
             </div>
           )
@@ -100,7 +101,7 @@ export default function Category() {
         {/* <Link href='/category/lobby/quiz'> */}
         <button onClick={handleClick} className="bg-custom_purple text-xl text-white text-center w-44 h-16 m-auto rounded border-white border-4 
               content-center place-content-center place-items-center font-bold">
-        Let's Start
+        Let&apos;s Start
         </button>
         {/* </Link> */}
       </div>

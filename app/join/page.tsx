@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 
 export default function Category() {
@@ -51,12 +52,12 @@ export default function Category() {
   };
 
   useEffect(() => {
-    let random = (Math.random() + 1).toString(36).substring(2);
+    const random = (Math.random() + 1).toString(36).substring(2);
     setClientId(random);
 
     if (data.length > 0) {
-    let category = data[0]["categoryCode"]
-    let room     = data[0]["roomCode"]
+    const category = data[0]["categoryCode"]
+    const room     = data[0]["roomCode"]
 
       router.push(`/${category}/${room}?clientId=${clientId}`);
     }
@@ -65,7 +66,7 @@ export default function Category() {
   return (
     <main>
       <div className="mt-10">
-        <img src="../logo2.png" className="object-cover" alt="Responsive Image" />
+        <Image src="/logo2.png" className="object-cover" alt="Responsive Image" width={305} height={225} />
       </div>
       <div className="grid grid-cols-1 mt-2 justify-center content-center">
 

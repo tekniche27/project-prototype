@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaTrophy, FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaPercentage, FaClock, FaStopwatch } from "react-icons/fa";
+import { FaTrophy, FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaPercentage } from "react-icons/fa";
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 

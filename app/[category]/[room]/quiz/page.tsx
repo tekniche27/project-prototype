@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import QuestionTimer from "@/components/QuestionsTimer";
 import { usePoints } from "@/context/PointsContext";
 import Results from "@/components/Results";
@@ -11,7 +11,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 
 const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}`) // replace with your own URL if necessary
 
-export default function quiz() {
+export default function Quiz() {
 
     const params = useParams<{ category: string; room: string  }>();
 
@@ -50,7 +50,8 @@ export default function quiz() {
     useEffect(() => {
 
       if (typeof navigator !== "undefined") {
-        const Peer = require("peerjs").default
+        //const Peer = require("peerjs").default
+        //console.log(Peer);
       }
 
       // reset points to 0 on page reload
@@ -201,6 +202,8 @@ export default function quiz() {
         {
           updateGameScore().then(data => {
             console.log(data);
+            console.log(isPlaying);
+            console.log(timePerQuestion);
             setShowResults(true);
           });
           
@@ -226,15 +229,15 @@ export default function quiz() {
         });
 
 
-        let uniqueMessages = Array.from(new Set(messages));
-        let uniqueClients = Array.from(new Set(clients));
+        const uniqueMessages = Array.from(new Set(messages));
+        const uniqueClients = Array.from(new Set(clients));
 
         //console.log(uniqueMessages);
 
         //var arr = [{"name":"bathroom","value":54,"timeStamp":1562318089713},{"name":"bathroom","value":55,"timeStamp":1562318090807},{"name":"bedroom","value":48,"timeStamp":1562318092084},{"name":"bedroom","value":49,"timeStamp":1562318092223},{"name":"room","value":41,"timeStamp":1562318093467}];
 
        
-        let allPoints:any = uniqueMessages.reduce((r:any, o:any) => (o.points < (r[o.clientId] || {}).points || (r[o.clientId] = o), r), {});
+        const allPoints:any = uniqueMessages.reduce((r:any, o:any) => (o.points < (r[o.clientId] || {}).points || (r[o.clientId] = o), r), {});
 
 
         // const sortedData = arr.sort((a:any,b:any)=> (a.clientId.localeCompare(b.clientId) || a.points - b.points));

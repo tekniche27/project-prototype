@@ -44,7 +44,8 @@ export default function SignIn() {
                 setGlobalError(result.message);
             }
         } catch (error) {
-            console.log("An unexpected error occurred. Please try again.");
+            console.log(error)
+            //console.log("An unexpected error occurred. Please try again.");
         }
     };
 

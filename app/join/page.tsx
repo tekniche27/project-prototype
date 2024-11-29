@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from "next/link";
 
 
 export default function Category() {
 
   const [clientId, setClientId] = useState("");
   const [roomCode, setRoomCode] = useState("");
+  const [nickname, setNickName] = useState("");
   const [data, setData] = useState<any[]>([]);
 
   const router = useRouter();
@@ -32,7 +34,7 @@ export default function Category() {
       setData(newData);
 
      const postReq = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/games`,{
-        body: JSON.stringify({ roomCode: roomCode, clientId: clientId }),
+        body: JSON.stringify({ roomCode: roomCode, clientId: clientId, nickname: nickname }),
         headers: {
           'Content-Type': 'application/json'       
         },
@@ -44,11 +46,20 @@ export default function Category() {
   };
 
   const handleClick = () => {
+    if(nickname==="")
+    {
+      alert("Please enter your nickname.");
+      return;
+    }
     joinRoom();
   };
 
-  const onChangeHandler = (event:any) => {
+  const onChangeRoomCodeHandler = (event:any) => {
     setRoomCode(event.target.value);
+  };
+
+  const onChangeNickNameHandler = (event:any) => {
+    setNickName(event.target.value);
   };
 
   useEffect(() => {
@@ -59,7 +70,7 @@ export default function Category() {
     const category = data[0]["categoryCode"]
     const room     = data[0]["roomCode"]
 
-      router.push(`/${category}/${room}?clientId=${clientId}`);
+      router.push(`/${category}/${room}?clientId=${clientId}&nickname=${nickname}`);
     }
   }, [data]);
 
@@ -71,14 +82,30 @@ export default function Category() {
       <div className="grid grid-cols-1 mt-2 justify-center content-center">
 
       <span className="text-black text-center text-3xl font-bold">
-        Enter Game Code: 
+        Name:
         &nbsp;
         <input 
          type="text"
          name="name"
-         onChange={onChangeHandler}
-         value={roomCode}
+         onChange={onChangeNickNameHandler}
+         value={nickname}
          className="bg-white text-xl text-black text-center w-96 h-16 m-auto rounded-s-3xl rounded-e-3xl
+                content-center place-content-center place-items-center" />
+      </span>
+
+      </div>
+
+      <div className="grid grid-cols-1 mt-7 justify-center content-center">
+
+      <span className="text-black text-center text-3xl font-bold">
+        Code: 
+        &nbsp;
+        <input 
+        type="text"
+        name="name"
+        onChange={onChangeRoomCodeHandler}
+        value={roomCode}
+        className="bg-white text-xl text-black text-center w-96 h-16 m-auto rounded-s-3xl rounded-e-3xl
                 content-center place-content-center place-items-center" />
       </span>
 
@@ -90,6 +117,14 @@ export default function Category() {
         Join Game
         </button>
       </div>
+      <Link href='/'>
+      <div className="grid grid-cols-1 mt-5 justify-center content-center place-content-center place-items-center">
+        <button className="bg-custom_blue text-2xl text-white text-center w-44 h-16 m-auto rounded-s-3xl rounded-e-3xl border-white border-4 
+              content-center place-content-center place-items-center font-bold">
+        Back Home
+        </button>
+      </div>
+      </Link>
     </main>
   )
 }

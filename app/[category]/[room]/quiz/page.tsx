@@ -7,20 +7,21 @@ import useSound from 'use-sound';
 import { io } from "socket.io-client";
 import Peer from 'peerjs';
 import { useParams, useSearchParams } from 'next/navigation';
-//import { transform } from "next/dist/build/swc";
 
 const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}`) // replace with your own URL if necessary
 
 export default function Quiz() {
 
-    const params = useParams<{ category: string; room: string  }>();
+    const params = useParams<{ category: string; room: string, nickname: string  }>();
 
     const roomCodeParam = new URLSearchParams({
       'roomCode': params.room
     });
 
     const searchParams = useSearchParams();
-    const clientId = searchParams.get('clientId');
+    const clientId   = searchParams.get('clientId');
+    const nickname   = searchParams.get('nickname');
+    const playerCode = searchParams.get('nickname')+"-"+searchParams.get('clientId');
 
     const { points, setPoints } = usePoints();
     const [questions, setQuestions] = useState([] as any); 
@@ -37,8 +38,6 @@ export default function Quiz() {
     const [timePerQuestion, setTimePerQuestion] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
 
-    // const divRef = useRef()
-    // const inputRef = useRef()
     const [peer, setPeer] = useState(null as any)
     const [connectTo, setConnectTo] = useState<any>([])
     const [connected, setConnected] = useState<any>([])
@@ -58,8 +57,9 @@ export default function Quiz() {
       setPoints(0);
       
      
-      const user: any = new Peer(clientId as any, {
-        host: `${process.env.NEXT_PUBLIC_SOCKET_HOST}`,
+      const user: any = new Peer(playerCode as any, {
+        //host: `${process.env.NEXT_PUBLIC_SOCKET_HOST}`,
+        host: '/',
         port: `${process.env.NEXT_PUBLIC_SOCKET_PORT}` as any,
         path: 'chat',
         debug: 1,
@@ -104,16 +104,17 @@ export default function Quiz() {
         console.log('A user connected message from server', id)
         //setMessages((messages:any) => [...messages, `User with ID: ${id} joined`])
 
+        const oid = id.split('-')[0];
+
         //added to broadcast newly added client
-        setClients((clients:any) => [...clients, `Client ID: ${id} joined`])
-       
+        setClients((clients:any) => [...clients, `${oid} joined the game.`])
         setConnectTo((connectTo:any) => [...connectTo, id])
       })
      }, [])
 
      useEffect(() => {
-      setMessages((messages: any) => [...messages, {"clientId": clientId, "points": points}])
-      sendMessageToConnected({"clientId": clientId, "points": points});
+      setMessages((messages: any) => [...messages, {"playerCode": playerCode, "clientId": clientId, "nickname": nickname, "points": points}])
+      sendMessageToConnected({"playerCode": playerCode, "clientId": clientId, "nickname": nickname, "points": points});
      }, [points])
   
      const sendMessage = (to:any, message: any) => {
@@ -230,33 +231,30 @@ export default function Quiz() {
 
 
         const uniqueMessages = Array.from(new Set(messages));
-        const uniqueClients = Array.from(new Set(clients));
-
+        const uniqueClients = Array.from(new Set(clients));       
+        //const allPoints:any = uniqueMessages.reduce((r:any, o:any) => (o.points < (r[o.clientId] || {}).points || (r[o.clientId] = o), r), {});
         //console.log(uniqueMessages);
-
-        //var arr = [{"name":"bathroom","value":54,"timeStamp":1562318089713},{"name":"bathroom","value":55,"timeStamp":1562318090807},{"name":"bedroom","value":48,"timeStamp":1562318092084},{"name":"bedroom","value":49,"timeStamp":1562318092223},{"name":"room","value":41,"timeStamp":1562318093467}];
-
-       
-        const allPoints:any = uniqueMessages.reduce((r:any, o:any) => (o.points < (r[o.clientId] || {}).points || (r[o.clientId] = o), r), {});
-
-
-        // const sortedData = arr.sort((a:any,b:any)=> (a.clientId.localeCompare(b.clientId) || a.points - b.points));
-        // console.log(sortedData);
-
-        // allPoints.sort((c1:any, c2:any) => {
-        //   return c2.points - c1.points;
-        // });
+        //console.log(allPoints);
         
-        // allPoints = allPoints.map((val:any, index:any) => {
-        
-        //   val.rank = index + 1;
-        //   return val;
-        // })
-        
-        // console.log(allPoints);
-  
-      
+        const arrayFiltered:any = [];
 
+        uniqueMessages.forEach((obj:any) => {
+            const item = arrayFiltered.find((thisItem:any) => thisItem.clientId === obj.clientId);
+            if (item) {
+                if (item.points < obj.points) {
+                    item.points = obj.points;
+                }
+                
+                return;
+            }
+            
+            arrayFiltered.push(obj);
+        });
+
+        let finalData:any = [];
+        finalData = arrayFiltered.sort((a:any, b:any) => b.points - a.points);
+
+        
     return (
         <>
         {questions.length > 0 ?
@@ -340,19 +338,16 @@ export default function Quiz() {
             pt-5
             pl-5
             ">
-            
-            {/* <div>{clientId} : {points}</div> */}
-            {/* {uniqueMessages.map((message:any, index:any) => <p key={index}>{message}</p>)} */}
-            {/* <div>{messages[messages.length - 1]}</div> */}
-      
+                  
              <p className="text-blue-600 font-semibold
-             text-center justify-center content-center place-content-center place-items-center mb-5">LEADERBOARD</p>
+             text-center justify-center content-center place-content-center place-items-center mb-5">LEADERBOARDS</p>
              
-            {Object.keys(allPoints).map((item:any, index:any) => (
-              <div key={index}>
-              <span style={{ 'textTransform': 'uppercase' }}> {allPoints[item].clientId}</span>
+            {finalData.map((item:any, index:any) => (
+              <div className="grid grid-cols-2 gap-2 justify-center content-center"
+              key={index}>
+              <span> {item.nickname}</span>
               {' '}
-              <span style={{ 'textTransform': 'uppercase', 'paddingLeft': '40px' }}>{allPoints[item].points}</span>
+              <span className="text-orange-600">{item.points}</span>
               </div>
             ))} 
 
@@ -396,25 +391,6 @@ export default function Quiz() {
                 </button>
             )}
 
-            {/* <button className="bg-custom_yellow text-2xl text-white text-center rounded-s-3xl rounded-e-3xl border-4 h-32
-            justify-center content-center place-content-center place-items-center border-white m-4">
-             {questions[currentQuestionIndex]?.answerOptions[0]}
-            </button>
-
-            <button className="bg-custom_pink text-2xl text-white text-center rounded-s-3xl rounded-e-3xl border-4 h-32
-            justify-center content-center place-content-center place-items-center border-white m-4">
-             {questions[currentQuestionIndex]?.answerOptions[1]}
-            </button>
-
-            <button className="bg-custom_purple text-2xl text-white text-center rounded-s-3xl rounded-e-3xl border-4 h-32
-            justify-center content-center place-content-center place-items-center border-white m-4">
-             {questions[currentQuestionIndex]?.answerOptions[2]}
-            </button>
-
-            <button className="bg-custom_green text-2xl text-white text-center rounded-s-3xl rounded-e-3xl border-4 h-32
-            justify-center content-center place-content-center place-items-center border-white m-4">
-             {questions[currentQuestionIndex]?.answerOptions[3]}
-            </button> */}
         </div>
         <div className="text-sm md:text-md lg:text-lg xl:text-lg 2xl:text-lg
                  place-self-end text-blue-600 mr-36">

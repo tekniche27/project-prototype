@@ -9,9 +9,9 @@ export default function Home() {
         <Image src="/logo1.png" className="w-25 h-25 object-cover" alt="Responsive Image" width={605} height={225} />
         </div>
         <div className="flex flex-wrap place-content-center">
-            <button className="bg-custom_yellow text-2xl text-white text-center w-52 h-14 m-10 rounded border-white border-4">
+            {/* <button className="bg-custom_yellow text-2xl text-white text-center w-52 h-14 m-10 rounded border-white border-4">
             Play Now
-            </button>
+            </button> */}
             <Link href='/category'>
             <button className="bg-custom_pink text-2xl text-white text-center w-52 h-14 m-10 rounded border-white border-4">
             Create Game

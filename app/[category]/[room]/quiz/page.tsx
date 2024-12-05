@@ -12,7 +12,8 @@ const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}`) // replace with 
 
 export default function Quiz() {
 
-    const params = useParams<{ category: string; room: string, nickname: string  }>();
+
+    const params = useParams<{ category: string; room: string  }>();
 
     const roomCodeParam = new URLSearchParams({
       'roomCode': params.room
@@ -20,8 +21,8 @@ export default function Quiz() {
 
     const searchParams = useSearchParams();
     const clientId   = searchParams.get('clientId');
-    const nickname   = searchParams.get('nickname');
-    const playerCode = searchParams.get('nickname')+"-"+searchParams.get('clientId');
+    const nickname   = searchParams.get('clientId');
+    const playerCode = params.room+"-"+searchParams.get('clientId');
 
     const { points, setPoints } = usePoints();
     const [questions, setQuestions] = useState([] as any); 
@@ -45,7 +46,6 @@ export default function Quiz() {
 
     const [clients, setClients] = useState<any>([])
 
-
     useEffect(() => {
 
       if (typeof navigator !== "undefined") {
@@ -56,13 +56,39 @@ export default function Quiz() {
       // reset points to 0 on page reload
       setPoints(0);
       
-     
+      
       const user: any = new Peer(playerCode as any, {
         //host: `${process.env.NEXT_PUBLIC_SOCKET_HOST}`,
         host: '/',
         port: `${process.env.NEXT_PUBLIC_SOCKET_PORT}` as any,
         path: 'chat',
         debug: 1,
+        config: { 'iceServers': [
+          {
+            urls: "stun:stun.relay.metered.ca:80",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:80",
+            username: "0555259d8c1acf638f12e69a",
+            credential: "cOxcnvJtznHlDncW",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:80?transport=tcp",
+            username: "0555259d8c1acf638f12e69a",
+            credential: "cOxcnvJtznHlDncW",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:443",
+            username: "0555259d8c1acf638f12e69a",
+            credential: "cOxcnvJtznHlDncW",
+          },
+          {
+            urls: "turns:global.relay.metered.ca:443?transport=tcp",
+            username: "0555259d8c1acf638f12e69a",
+            credential: "cOxcnvJtznHlDncW",
+          },
+        ]
+         }
       });
   
       user.on('open', (id:any) => {
@@ -229,13 +255,8 @@ export default function Quiz() {
           onend: () => setIsPlaying(true),
         });
 
-
         const uniqueMessages = Array.from(new Set(messages));
         const uniqueClients = Array.from(new Set(clients));       
-        //const allPoints:any = uniqueMessages.reduce((r:any, o:any) => (o.points < (r[o.clientId] || {}).points || (r[o.clientId] = o), r), {});
-        //console.log(uniqueMessages);
-        //console.log(allPoints);
-        
         const arrayFiltered:any = [];
 
         uniqueMessages.forEach((obj:any) => {

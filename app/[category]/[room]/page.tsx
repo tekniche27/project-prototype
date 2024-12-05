@@ -11,7 +11,6 @@ export default function Category() {
 
   const searchParams = useSearchParams();
   const clientId = searchParams.get('clientId');
-  const nickname = searchParams.get('nickname');
 
   const [clientData, setClientData] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -56,12 +55,19 @@ export default function Category() {
       setLoading(false)
     });
 
+    const interval = setInterval(() => {
+      getRoomClientList().then(data => {
+        setClientData(data)
+      });
+     },20*1000);
+     return () => clearInterval(interval);
+
   }, [])
 
   //console.log("question list: ", questionData);
 
   const handleClick = () => {
-    router.push(`/${params.category}/${params.room}/quiz?clientId=${clientId}&nickname=${nickname}`);
+    router.push(`/${params.category}/${params.room}/quiz?clientId=${clientId}`);
   };
 
  

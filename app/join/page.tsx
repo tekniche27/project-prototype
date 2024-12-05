@@ -45,13 +45,35 @@ export default function Category() {
     }
   };
 
+  const checkIfExists = async () => {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/games/checkifexists?${params}&clientId=${clientId}`,{
+      headers: {
+        'Content-Type': 'application/json'       
+      },
+      method: 'GET'
+    });
+    const data = await req.json();
+    //console.log(data[0].recordExists===1);
+    if(data.length!=0)
+    alert("Please choose another name.")
+    else
+    {
+      joinRoom();
+    }
+  };
+
   const handleClick = () => {
     if(nickname==="")
     {
       alert("Please enter your nickname.");
       return;
     }
-    joinRoom();
+    if(roomCode==="")
+      {
+        alert("Please enter room code.");
+        return;
+    }
+    checkIfExists();
   };
 
   const onChangeRoomCodeHandler = (event:any) => {
@@ -60,17 +82,18 @@ export default function Category() {
 
   const onChangeNickNameHandler = (event:any) => {
     setNickName(event.target.value);
+    setClientId(event.target.value);
   };
 
   useEffect(() => {
-    const random = (Math.random() + 1).toString(36).substring(2);
-    setClientId(random);
+    //const random = (Math.random() + 1).toString(36).substring(2);
+    //setClientId(random);
 
     if (data.length > 0) {
     const category = data[0]["categoryCode"]
     const room     = data[0]["roomCode"]
 
-      router.push(`/${category}/${room}?clientId=${clientId}&nickname=${nickname}`);
+      router.push(`/${category}/${room}?clientId=${clientId}`);
     }
   }, [data]);
 

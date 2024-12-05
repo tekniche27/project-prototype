@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaTrophy, FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaPercentage } from "react-icons/fa";
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import Link from "next/link";
 
 const Results = ({
   score,
@@ -115,6 +116,14 @@ const Results = ({
           </p>
         </div>
       </div>
+      <Link href='/'>
+      <div className="grid grid-cols-1 mt-5 justify-center content-center place-content-center place-items-center">
+        <button className="bg-custom_blue text-2xl text-white text-center w-44 h-16 m-auto rounded-s-3xl rounded-e-3xl border-white border-4 
+              content-center place-content-center place-items-center font-bold">
+        Back Home
+        </button>
+      </div>
+      </Link>
     </div>
   );
 };

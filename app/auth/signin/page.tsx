@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
+// import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ import { signInSchema } from "@/lib/zod";
 import LoadingButton from "@/components/loading-button";
 import {
     handleCredentialsSignin,
-    handleGithubSignin,
+    // handleGithubSignin,
 } from "@/app/actions/authActions";
 import { useState } from "react";
 import ErrorMessage from "@/components/error-message";
@@ -108,7 +108,7 @@ export default function SignIn() {
                         </form>
                     </Form>
 
-                    <span className="text-sm text-gray-500 text-center block my-2">
+                    {/* <span className="text-sm text-gray-500 text-center block my-2">
                         or
                     </span>
                     <form className="w-full" action={handleGithubSignin}>
@@ -120,7 +120,7 @@ export default function SignIn() {
                             <GitHubLogoIcon className="h-4 w-4 mr-2" />
                             Sign in with GitHub
                         </Button>
-                    </form>
+                    </form> */}
                 </CardContent>
             </Card>
         </div>

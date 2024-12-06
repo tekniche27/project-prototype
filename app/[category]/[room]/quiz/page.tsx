@@ -282,7 +282,7 @@ export default function Quiz() {
         <>
           {!showResults ? (
           <>
-          <div className="mt-3 ml-5">            
+          <div className="mt-1 ml-5">            
               <button onClick={playBoop} className="text-xl text-black text-center
                   content-center place-content-center place-items-center font-bold place-self-end mr-72">
                <span role="img" aria-label="Person with lines near mouth">
@@ -296,10 +296,21 @@ export default function Quiz() {
                 Question {currentQuestionIndex + 1} of {questions.length}
             </h2>
 
+            <div className="bg-custom_yellow
+              text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl
+            text-white text-center 
+              w-60
+              h-12
+              rounded border-white border-4 
+              content-center place-content-center place-items-center font-bold 
+              place-self-center">
+              {clientId}
+            </div>
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 
-                          mt-8 content-center place-content-center">
+                          mt-3 content-center place-content-center">
             <div className="bg-custom_blue 
               text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl
             text-white text-center 
@@ -343,7 +354,7 @@ export default function Quiz() {
             text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl 
           text-black 
             col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 2xl:col-span-2
-            text-center rounded-s-3xl rounded-e-3xl border-4 h-48
+            text-center rounded-s-3xl rounded-e-3xl border-4 h-44
             justify-center content-center place-content-center place-items-center border-blue-500 m-4">
              {questions[currentQuestionIndex]?.questionDesc}
             </div>
@@ -382,9 +393,9 @@ export default function Quiz() {
               <button
               key={option}
               onClick={() => handleAnswer(option)}
-              className={`text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl 
+              className={`text-xs md:text-sm lg:text-lg xl:text-lg 2xl:text-xl 
                         font-semibold text-black text-center rounded-s-3xl rounded-e-3xl border-4 h-32
-                        justify-center content-center place-content-center place-items-center border-white m-4 ${
+                        justify-center content-center place-content-center place-items-center border-white m-2 ${
                 isAnswered && option === questions[currentQuestionIndex].answer
                   ? "bg-custom_green text-white"
                   : isAnswered && option === selectedOption
@@ -404,9 +415,9 @@ export default function Quiz() {
                 <button
                 onClick={handleNext}
                 className="bg-blue-500 text-white text-center 
-                text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl
+                text-xs md:text-sm lg:text-lg xl:text-lg 2xl:text-xl
                 rounded-s-3xl rounded-e-3xl border-4 h-20 font-semibold hover:bg-blue-600 transition
-                justify-center content-center place-content-center place-items-center border-white m-4"
+                justify-center content-center place-content-center place-items-center border-white m-2"
                 >
                 {currentQuestionIndex === questions.length - 1 ? "Submit" : "Next Question"}
                 </button>

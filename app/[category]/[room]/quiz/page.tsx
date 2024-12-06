@@ -22,7 +22,7 @@ export default function Quiz() {
     const searchParams = useSearchParams();
     const clientId   = searchParams.get('clientId');
     const nickname   = searchParams.get('clientId');
-    const playerCode = params.room+"-"+searchParams.get('clientId');
+    const playerCode = searchParams.get('clientId')+"-"+params.room;
 
     const { points, setPoints } = usePoints();
     const [questions, setQuestions] = useState([] as any); 
